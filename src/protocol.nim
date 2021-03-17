@@ -52,6 +52,7 @@ when isMainModule:
       doAssert false
 
   block:
-    let expected = """{"username": "dom", "message": "hello"}""" & "\c\l"
+    let expected = """{"username":"dom","message":"hello"}""" & "\c\l"
+    doAssert createMessage("dom", "hello") == expected
 
   echo "All tests passed"
