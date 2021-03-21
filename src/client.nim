@@ -10,18 +10,19 @@ proc connect(socket: AsyncSocket, serverAddr: string) {.async.} =
     echo(parsed.username, ": ", parsed.message)
 
 echo "Chat application started"
-if paramCount() == 0:
-  quit "Please specify server address"
+if paramCount() < 2:
+  quit "Please specify server address and user name"
 
 let serverAddr = paramStr(1)
+let username = paramStr(2)
 echo("Connecting to ", serverAddr)
 let socket = newAsyncSocket()
 asyncCheck connect(socket, serverAddr)
 
-var messageFlowVar = spawn std.readLine()
+var messageFlowVar = spawn stdin.readLine()
 while true:
   if messageFlowVar.isReady():
-    let message = createMessage("Anonymous", ^messageFlowVar)
+    let message = createMessage(username, ^messageFlowVar)
     asyncCheck socket.send(message)
     messageFlowVar = spawn stdin.readLine()
     asyncdispatch.poll()
